@@ -37,7 +37,7 @@ async function run() {
       }
 
       const cursor = jobsCollection.find(query);
-      const result = await cursor.limit(6).toArray();
+      const result = await cursor.toArray();
       res.send(result);
     });
     app.get("/jobs/:id", async (req, res) => {
@@ -59,6 +59,7 @@ async function run() {
       const query = {
         applicantEmail: email,
       };
+
       const result = await applicationCollection.find(query).toArray();
 
       // bad way to data aggregate
@@ -80,6 +81,14 @@ async function run() {
     app.post("/applications", async (req, res) => {
       const application = req.body;
       const result = await applicationCollection.insertOne(application);
+      res.send(result);
+    });
+
+    app.get("/applications/job/:job_id", async (req, res) => {
+      const job_id = req.params.job_id;
+
+      const query = { jobId: job_id };
+      const result = await applicationCollection.find(query).toArray();
       res.send(result);
     });
 
